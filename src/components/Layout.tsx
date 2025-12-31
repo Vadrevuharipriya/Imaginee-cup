@@ -1,8 +1,10 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Ear, LayoutDashboard, Users, BookOpen, Clock } from 'lucide-react';
+import { Ear, LayoutDashboard, Users, BookOpen, Clock, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Layout() {
   const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -14,43 +16,67 @@ export default function Layout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100">
-      <header className="bg-white border-b border-blue-100 shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-2 rounded-lg">
-              <Ear className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-blue-900">
-                Layer-1 Classroom Listener
-              </h1>
-              <p className="text-sm text-blue-600">Early confusion detection system</p>
-            </div>
+    <div className="min-h-screen flex bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100">
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed z-50 inset-y-0 left-0 w-64 bg-white border-r border-blue-100 shadow-sm transform transition-transform duration-200
+        ${open ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0 lg:static`}
+      >
+        <div className="p-6 flex items-center gap-3 border-b">
+          <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-2 rounded-lg">
+            <Ear className="w-6 h-6 text-white" />
           </div>
-
-          <nav className="flex gap-2 overflow-x-auto pb-2 -mb-2">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                to={path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ${
-                  isActive(path)
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
-                    : 'text-blue-600 hover:bg-blue-100'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <div>
+            <h1 className="text-base font-semibold text-blue-900">
+              Classroom Listener
+            </h1>
+            <p className="text-xs text-blue-600">Layer-1 System</p>
+          </div>
         </div>
-      </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <Outlet />
-      </main>
+        <nav className="p-4 space-y-1">
+          {navItems.map(({ path, label, icon: Icon }) => (
+            <Link
+              key={path}
+              to={path}
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              ${
+                isActive(path)
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                  : 'text-blue-700 hover:bg-blue-100'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col">
+        {/* Mobile top bar */}
+        <header className="lg:hidden sticky top-0 z-30 bg-white border-b px-4 py-3 flex items-center gap-3">
+          <button onClick={() => setOpen(true)}>
+            <Menu className="w-6 h-6 text-blue-700" />
+          </button>
+          <span className="font-semibold text-blue-900">Classroom Listener</span>
+        </header>
+
+        <main className="flex-1 px-6 py-8 max-w-7xl w-full mx-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

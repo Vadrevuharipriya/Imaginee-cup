@@ -172,7 +172,7 @@ export default function StudentsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-4 text-sm">
                 <div className="bg-white bg-opacity-60 p-3 rounded-lg">
                   <p className="text-blue-600 text-xs mb-1">Avg. Pause Duration</p>
                   <p className="font-semibold text-blue-900">{student.pauseDuration}s</p>
